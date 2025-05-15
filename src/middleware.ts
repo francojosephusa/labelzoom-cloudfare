@@ -10,10 +10,12 @@ export default authMiddleware({
   publicRoutes: [
     '/',
     '/api/webhook/stripe',
-    '/api/ocr'
+    '/api/ocr',
+    '/api/health'
   ],
   ignoredRoutes: [
-    '/api/webhook/stripe'
+    '/api/webhook/stripe',
+    '/api/health'
   ]
 });
 
