@@ -46,3 +46,6 @@ next-env.d.ts
 # temporary key files
 *-keys.txt
 env-setup.txt
+
+# logs
+*.log
