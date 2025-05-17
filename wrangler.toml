@@ -1,16 +1,8 @@
 name = "labelzoom-cloudfare"
 compatibility_date = "2024-01-01"
 
-[pages]
-pages_build_output_dir = ".next"
-
 [build]
-command = "npm install --legacy-peer-deps && npm run build"
-output_directory = ".next"
-
-[build.environment]
-NODE_VERSION = "20"
-NPM_VERSION = "10"
+command = "npm run build"
 
 [env]
 NEXT_PUBLIC_SUPABASE_URL = ""
