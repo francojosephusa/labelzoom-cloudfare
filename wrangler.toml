@@ -1,16 +1,4 @@
 name = "labelzoom-cloudfare"
-compatibility_date = "2024-01-01"
-
-[build]
-command = "npm install --legacy-peer-deps && NODE_ENV=production npm run build"
-pages_build_output_dir = ".next"
-
-[build.environment]
-NODE_VERSION = "18.17.1"
-NPM_VERSION = "9.6.7"
-
-[pages]
-pages_build_output_dir = ".next"
 
 [env]
 NEXT_PUBLIC_SUPABASE_URL = ""
@@ -20,12 +8,4 @@ CLERK_SECRET_KEY = ""
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = ""
 STRIPE_SECRET_KEY = ""
 STRIPE_PRICE_ID = ""
-NEXT_PUBLIC_APP_URL = "https://labelzoom.app"
-
-[[routes]]
-pattern = "labelzoom.app"
-custom_domain = true
-
-[[routes]]
-pattern = "www.labelzoom.app"
-custom_domain = true 
+NEXT_PUBLIC_APP_URL = "https://labelzoom.app" 
