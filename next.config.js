@@ -15,6 +15,37 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Optimize bundle size
+  webpack: (config, { isServer }) => {
+    // Optimize chunks
+    config.optimization.splitChunks = {
+      chunks: 'all',
+      minSize: 20000,
+      maxSize: 24000000, // Keep chunks under 24MB
+      cacheGroups: {
+        default: false,
+        vendors: false,
+        // Vendor chunk
+        vendor: {
+          name: 'vendor',
+          chunks: 'all',
+          test: /node_modules/,
+          priority: 20,
+        },
+        // Common chunk
+        common: {
+          name: 'common',
+          minChunks: 2,
+          chunks: 'all',
+          priority: 10,
+          reuseExistingChunk: true,
+          enforce: true,
+        },
+      },
+    };
+    return config;
+  },
+  // Existing headers configuration
   headers: async () => [
     {
       source: '/:path*',
