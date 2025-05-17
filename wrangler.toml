@@ -1,9 +1,11 @@
 name = "labelzoom.app"
 compatibility_date = "2024-01-01"
 
+[pages]
+build_output_directory = ".next"
+
 [build]
 command = "npm install --legacy-peer-deps && npm run build"
-pages_build_output_dir = ".next"
 
 [env]
 NEXT_PUBLIC_SUPABASE_URL = ""
