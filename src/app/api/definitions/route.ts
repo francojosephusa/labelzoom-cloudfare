@@ -34,6 +34,7 @@ export async function POST(req: Request) {
 
     // If not in cache, get definition from OpenAI
     const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
       messages: [
         {
           role: "system",
@@ -41,16 +42,17 @@ export async function POST(req: Request) {
         },
         {
           role: "user",
-          content: `Please provide information about "${term}" as it appears on product labels. Format as JSON with keys: definition, category, examples, safetyInfo, relatedTerms`
+          content: term
         }
-      ],
-      model: "gpt-3.5-turbo",
-      response_format: { type: "json_object" },
-      max_tokens: 250,
-      temperature: 0.3,
+      ]
     });
 
-    const response = JSON.parse(completion.choices[0].message.content);
+    const content = completion.choices[0].message.content;
+    if (!content) {
+      throw new Error('No content received from OpenAI');
+    }
+
+    const response = JSON.parse(content);
 
     // Cache the result in Supabase with enhanced structure using admin client
     await supabaseAdmin.from('definitions').insert([
@@ -59,8 +61,8 @@ export async function POST(req: Request) {
         definition: response.definition,
         category: response.category,
         examples: response.examples,
-        safety_info: response.safetyInfo,
-        related_terms: response.relatedTerms,
+        safety_info: response.safety_info,
+        related_terms: response.related_terms,
         source: 'OpenAI',
         created_at: new Date().toISOString(),
       }

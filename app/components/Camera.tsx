@@ -1,3 +1,5 @@
+'use client'
+
 import { useRef, useState, useCallback } from 'react'
 import { createWorker } from 'tesseract.js'
 import { Button } from './ui/Button'

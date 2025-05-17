@@ -21,22 +21,22 @@ function Check-DNS {
     
     try {
         $ips = [System.Net.Dns]::GetHostAddresses($domain) | ForEach-Object { $_.IPAddressToString }
-        $hasVercelIP = $false
+        $hasCloudflareIP = $false
         
         foreach ($ip in $ips) {
-            if ($vercelIPs -contains $ip) {
-                $hasVercelIP = $true
+            if ($ip -match "^(172\.67\.|104\.21\.)") {
+                $hasCloudflareIP = $true
                 break
             }
         }
         
-        $status = if ($hasVercelIP) { "PASS" } else { "FAIL" }
-        Write-Log -Message "DNS Check [$status] : $domain resolves to: $($ips -join ', ')" -Type $(if ($hasVercelIP) { "INFO" } else { "ERROR" })
-        return $hasVercelIP
+        $status = if ($hasCloudflareIP) { "PASS" } else { "FAIL" }
+        Write-Log "DNS Check [$status]: $domain resolves to: $($ips -join ', ')" -Type $status
+        return $ips
     }
     catch {
-        Write-Log -Message "DNS Check Failed: $_" -Type "ERROR"
-        return $false
+        Write-Log "DNS Check Failed: $domain : $($_.Exception.Message)" -Type "ERROR"
+        return $null
     }
 }
 
@@ -44,18 +44,16 @@ function Check-SSL {
     param([string]$domain)
     
     try {
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $request = [System.Net.HttpWebRequest]::Create("https://$domain")
+        $url = "https://$domain"
+        $request = [System.Net.WebRequest]::Create($url)
         $request.Timeout = 10000
         $response = $request.GetResponse()
         $response.Close()
-        Write-Log -Message "SSL Check [PASS]: Certificate is valid for $domain" -Type "INFO"
-        return $true
+        Write-Log "SSL Check [PASS]: Certificate is valid for $domain" -Type "PASS"
     }
     catch {
-        Write-Log -Message "SSL Check [FAIL]: $_" -Type "ERROR"
-        Write-Log -Message "Note: SSL certificate provisioning can take up to 1 hour" -Type "INFO"
-        return $false
+        Write-Log "SSL Check Failed: $($_.Exception.Message)" -Type "ERROR"
+        Write-Log "SSL certificate provisioning can take up to 1 hour" -Type "INFO"
     }
 }
 
