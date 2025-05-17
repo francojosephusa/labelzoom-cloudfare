@@ -4,7 +4,7 @@ name = "labelzoom-cloudfare"
 build_output_directory = ".next"
 
 [build]
-command = "npm install --legacy-peer-deps && NODE_ENV=production npm run build"
+command = "chmod +x build.sh && ./build.sh"
 
 [build.environment]
 NODE_VERSION = "18.17.1"
